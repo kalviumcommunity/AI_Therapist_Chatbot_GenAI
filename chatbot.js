@@ -9,22 +9,33 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-// Main chatbot function (Zero-Shot Prompting)
+// Main chatbot function (One-Shot Prompting)
 async function generateTherapeuticResponse(userInput) {
   try {
-    // Create a zero-shot therapeutic prompt
+    // One-shot example included in the prompt
+    const exampleConversation = `
+    Example:
+    User: "I'm feeling really anxious about work."
+    AI Therapist: "I hear that you’re feeling anxious about work. It’s understandable to feel pressure in such situations. 
+    Try taking a few deep breaths, and remind yourself that it’s okay to handle things one step at a time. 
+    What’s one small step you could take right now to feel a bit more in control?"
+    `;
+
     const prompt = `You are an empathetic AI therapist. 
-    A user says: "${userInput}".
-    
+    A user has shared: "${userInput}"
+
     Please provide a supportive and compassionate response that:
     1. Acknowledges their feelings with empathy
     2. Offers gentle guidance or coping strategies
     3. Maintains professional boundaries
     4. Encourages reflection or positive action
-    5. Is concise (under 150 words).`;
+    5. Is concise (under 150 words).
+
+    ${exampleConversation}
+    Now respond to the new user message.`;
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",   // you can also try "gpt-4o-mini"
+      model: "gpt-3.5-turbo",   // or gpt-4o-mini
       messages: [
         {
           role: "system",
@@ -43,25 +54,23 @@ async function generateTherapeuticResponse(userInput) {
 
     return {
       response: aiResponse,
-      mood_tag: "detected_by_AI",      // Placeholder since no manual mood detection
-      suggestion_type: "generated_by_AI"
+      mode: "one-shot"
     };
 
   } catch (error) {
     console.error('Error generating response:', error);
 
-    // Fallback response if API fails
+    // Fallback response
     return {
       response: "I'm here to listen. It sounds like you're going through something difficult. Could you tell me more about how you're feeling?",
-      mood_tag: "unknown",
-      suggestion_type: "general_support"
+      mode: "fallback"
     };
   }
 }
 
 // Test the chatbot
 async function testChatbot() {
-  const testInput = "I'm feeling really anxious about work today";
+  const testInput = "I feel very sad and demotivated these days";
   const response = await generateTherapeuticResponse(testInput);
   console.log('🤖 Chatbot Output:');
   console.log(JSON.stringify(response, null, 2));
