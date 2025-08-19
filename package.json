@@ -1,0 +1,26 @@
+{
+  "name": "ai_therapist_chatbot_genai",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "The AI Therapist Chatbot is a conversational AI tool designed to provide emotional support and guidance through empathetic and safe interactions. It uses natural language processing (NLP) to understand user emotions and replies with relevant suggestions based on techniques like Cognitive Behavioral Therapy (CBT), mindfulness, and stress management.",
+  "main": "chatbot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node chatbot.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kalviumcommunity/AI_Therapist_Chatbot_GenAI.git"
+  },
+  "keywords": ["ai", "chatbot", "therapy", "mental-health", "openai", "nodejs"],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kalviumcommunity/AI_Therapist_Chatbot_GenAI/issues"
+  },
+  "homepage": "https://github.com/kalviumcommunity/AI_Therapist_Chatbot_GenAI#readme",
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "openai": "^5.12.2"
+  }
+}
