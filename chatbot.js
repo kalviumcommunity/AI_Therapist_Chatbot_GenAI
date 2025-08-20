@@ -24,12 +24,12 @@ function detectEmotion(userInput) {
   return "general";
 }
 
-// Main chatbot function (Dynamic Prompting)
+// Main chatbot function (Dynamic Prompting + Chain of Thought Prompting)
 async function generateTherapeuticResponse(userInput) {
   try {
     const emotion = detectEmotion(userInput);
 
-    // Build dynamic prompt
+    // Emotion-based guidance
     let guidance = "";
     if (emotion === "anxious") {
       guidance = "Focus on calming techniques, grounding exercises, and reassurance.";
@@ -43,20 +43,28 @@ async function generateTherapeuticResponse(userInput) {
       guidance = "Provide general empathetic support with reflection and encouragement.";
     }
 
+    // Chain of Thought Prompt
     const prompt = `
-    You are an empathetic AI therapist.
-    The user has shared: "${userInput}"
+You are a compassionate AI therapist.
 
-    Detected Emotion: ${emotion.toUpperCase()}
+User's message: "${userInput}"
 
-    Special Guidance: ${guidance}
+Detected Emotion: ${emotion.toUpperCase()}
+Special Guidance: ${guidance}
 
-    Please respond in a way that:
-    1. Validates their feelings with compassion
-    2. Provides supportive coping strategies
-    3. Keeps the response under 150 words
-    4. Maintains professional but warm tone
-    `;
+Think through your response in this chain-of-thought format:
+
+Step 1: Reflect on what the user might be feeling based on the input. What specific emotions or worries are present?
+
+Step 2: Consider what might be causing or contributing to those emotions. Is it a situation, thought pattern, or unmet need?
+
+Step 3: Offer gentle, practical suggestions that align with the detected emotion and guidance above.
+
+Now, write a short and empathetic response (under 150 words) that:
+- Validates their feelings with compassion
+- Offers helpful coping techniques
+- Uses a warm and professional tone
+`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
@@ -79,7 +87,7 @@ async function generateTherapeuticResponse(userInput) {
     return {
       response: aiResponse,
       detectedEmotion: emotion,
-      mode: "dynamic-prompting"
+      mode: "chain-of-thought"
     };
 
   } catch (error) {
@@ -93,7 +101,7 @@ async function generateTherapeuticResponse(userInput) {
   }
 }
 
-// Test the chatbot
+// Test function for the chatbot
 async function testChatbot() {
   const testInputs = [
     "I’m really nervous about my exams",
@@ -111,6 +119,8 @@ async function testChatbot() {
   }
 }
 
+// Run the chatbot test
 testChatbot();
 
+// Export for external use
 export { generateTherapeuticResponse };
